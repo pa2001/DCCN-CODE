@@ -1,0 +1,89 @@
+/*
+In checksum error detection scheme, the data is divided into k segments each of m bits. 
+In the sender's end the segments are added using 1's complement arithmetic to get the sum. 
+The sum is complemented to get the checksum. ... 
+If the result is zero, the received data is accepted; otherwise discarded.
+*/
+#include<bits/stdc++.h>
+using namespace std;
+string addBinary(string a, string b)
+{
+    string result = "";
+    int s = 0; 
+    int i = a.size() - 1, j = b.size() - 1;
+    while (i >= 0 || j >= 0 || s == 1)
+    {
+       s += ((i >= 0)? a[i] - '0': 0);
+        s += ((j >= 0)? b[j] - '0': 0);
+        result = char(s % 2 + '0') + result;
+        s /= 2;
+        i--; j--;
+    }
+    return result;
+}
+string sender(vector<string>v)
+{
+  cout<<"\n****Sender****\n";
+  string res=v[0];
+  for(int i=1;i<v.size()-1;i++)
+  {
+    res=addBinary(res, v[i]);
+  }
+  for(int i=0;i<res.size();i++)
+  {
+    if(res[i]=='1')
+    res[i]='0';
+    else
+    res[i]='1';
+  }
+  cout<<"String sent by sender:-"<<res<<endl;
+  return res;
+}
+string reciever(vector<string>v)
+{
+  string sen=sender(v);  
+  cout<<"\n****Reciever****\n";
+  string res=v[0];
+  for(int i=1;i<v.size()-1;i++)
+  {
+    res=addBinary(res, v[i]);
+  }  
+  cout<<"String recieved by reciever:-"<<sen<<endl;
+  res=addBinary(res,sen);
+  for(int i=0;i<res.size();i++)
+  {
+    if(res[i]=='1')
+    res[i]='0';
+    else
+    res[i]='1';
+  }
+  return res;
+}
+int main()
+{
+  int frames;
+  cout<<"Enter number of frames:-";
+  cin>>frames;
+  int bit;
+  cout<<"\nEnter number of bits:-";
+  cin>>bit;
+  vector<string>v;
+  while(frames--)
+  {
+    cout<<"\nEnter String:-";
+    string s;
+    cin>>s;
+    v.push_back(s);
+  }
+  bool flag=true;
+  string ans=reciever(v);
+  for(int i=0;i<ans.size();i++)
+  {
+    if(ans[i]!='0')
+    flag=false;
+  }
+  if(flag)
+  cout<<"Accepted Data"<<endl;
+  else
+  cout<<"Error Detected"<<endl;
+}
