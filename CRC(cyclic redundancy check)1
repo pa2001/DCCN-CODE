@@ -1,0 +1,83 @@
+/*
+Encoding using CRC--->
+The communicating parties agrees upon the size of message block and the CRC divisor. 
+For example, the block chosen may be CRC (7, 4), where 7 is the total length of the block and 4 is the number of bits in the data segment. 
+The divisor chosen may be 1011.
+The sender performs binary division of the data segment by the divisor.
+It then appends the remainder called CRC bits to the end of data segment. This makes the resulting data unit exactly divisible by the divisor.
+
+Decoding using CRC--->
+The receiver divides the incoming data unit by the divisor.
+If there is no remainder, the data unit is assumed to be correct and is accepted.
+Otherwise, it is understood that the data is corrupted and is therefore rejected. 
+The receiver may then send an erroneous acknowledegment back to the sender for retransmission.
+*/
+#include<bits/stdc++.h>
+using namespace std;
+string xorString(string a,string b)
+{
+  int i=0,j=0,count=0;
+  string res="",ans="";
+  while(i<a.size())
+  {
+    cout<<a<<endl;
+    j=0;
+    while(j<b.size())
+    {
+      if(a[i]==b[j])
+      a[i]='0';
+      else
+      a[i]='1';
+      i++;
+      j++;
+    }
+    int k=0;
+    while(k<i)
+    {
+      if(a[k]=='1')
+      break;
+      k++;
+    }
+    i=k;
+    int n=a.size()-i;
+    if(n<b.size())
+    break;
+  }return a;
+}  
+string sender(string a,string b,string t)
+{
+  cout<<"\n***Sender*\n";
+  cout<<"Data Sender sends:-"<<t<<endl;
+  string res=xorString(a,b);
+  cout<<"Data after sender CRC:-"<<res<<endl;
+  int zero=a.size()-b.size()+1;
+  string send=t+res.substr(zero,b.size()-1);
+  return send;
+}
+void reciever(string a,string b,string t)
+{  
+  string rec=sender(a,b,t);
+  cout<<"\n***Reciever*\n";
+  cout<<"Data Reciever recieves:-"<<rec<<endl;
+  string res=xorString(rec,b);
+  cout<<"Data after reciever CRC:-"<<res<<endl;
+  set<char>s(res.begin(),res.end());
+  if(s.size()==1&&res[0]=='0')
+  cout<<"Accepted Data"<<endl;
+  else
+  cout<<"Data mismatched\nError!!!!!!!!!!!!!!"<<endl;
+}
+int main()
+{
+  cout<<"\nEnter data:-";
+  string s,t;
+  cin>>s;
+  t=s;
+  cout<<"\nEnter divisor string:-";
+  string d;
+  cin>>d;
+  int zero=d.size()-1;
+  while(zero--)
+  s+='0';
+  reciever(s,d,t);
+}
