@@ -1,0 +1,150 @@
+/*
+A parity bit is a check bit, which is added to a block of data for error detection purposes. 
+It is used to validate the integrity of the data. 
+The value of the parity bit is assigned either 0 or 1 that makes the number of 1s in the message block either even or odd depending upon the type of parity. 
+Parity check is suitable for single bit error detection only.
+The two types of parity checking are--->
+Even Parity − Here the total number of bits in the message is made even.
+Odd Parity − Here the total number of bits in the message is made odd.
+Error Detection by Adding Parity Bit
+Sender’s End − While creating a frame, the sender counts the number of 1s in it and adds the parity bit in following way--->
+In case of even parity − If number of 1s is even, parity bit value is 0. If number of 1s is odd, parity bit value is 1.
+In case of odd parity − If number of 1s is odd, parity bit value is 0. If number of 1s is even, parity bit value is 1.
+Receiver’s End − On receiving a frame, the receiver counts the number of 1s in it.
+In case of even parity check, if the count of 1s is even, the frame is accepted, otherwise it is rejected.
+In case of odd parity check, if the count of 1s is odd, the frame is accepted, otherwise it is rejected.
+*/
+import java.io.*;
+import java.util.*;
+class OddEvenParity {
+String dataR=new String();
+String dataS=new String();
+int i,option,len;
+int count1,count0;
+void getDataSender()throws IOException{
+System.out.println("--------------Ater--------------");
+System.out.println("EnterBinary data:");
+BufferedReader br=new BufferedReader(new InputStreamReader(System.in));
+dataS=br.readLine();
+len=dataS.length();
+for(i=0;i<dataS.length();i++){
+if(dataS.charAt(i)!='1' && dataS.charAt(i)!='0'){
+System.out.println("Enter binary values");
+return;
+}
+}
+System.out.println("Eventy or Odd Parity?");
+System.out.println("Enterr even or 2 for odd");
+Scanner s=new Scanner(System.in);
+option=s.nextInt();
+if(option==1){
+System.out.println("Senderagreed for Even parity");
+even();
+}
+else{
+System.out.println("Senderagreed for odd parity");
+odd();
+}
+System.out.println();
+}
+void even()throws IOException{
+count1=count0=0;
+for(i=0;i<dataS.length();i++){
+if(dataS.charAt(i)=='1'){
+count1++;
+}
+if(dataS.charAt(i)=='0'){
+count0++;
+}
+}
+if(count1%2==0){
+dataS=dataS+'0';
+System.out.println("Datar even parity:");
+for(i=0;i<dataS.length();i++){
+System.out.print(dataS.charAt(i));
+}
+}
+else{
+dataS=dataS+'1';
+System.out.println("Datar even parity:");
+for(i=0;i<dataS.length();i++){
+System.out.print(dataS.charAt(i));
+}
+}
+}
+void odd()throws IOException{
+count1=count0=0;
+for(i=0;i<dataS.length();i++){
+if(dataS.charAt(i)=='1'){
+count1++;
+}
+if(dataS.charAt(i)=='0'){
+count0++;
+}
+}
+if(count1%2!=0){
+dataS=dataS+'0';
+System.out.println("Datar odd parity:");
+for(i=0;i<dataS.length();i++){
+System.out.print(dataS.charAt(i));
+}
+}
+else{
+dataS=dataS+'1';
+System.out.println("Datar odd parity:");
+for(i=0;i<dataS.length();i++){
+System.out.print(dataS.charAt(i));
+}
+}
+}
+void getDataReciver()throws IOException{
+System.out.println("\n\n--------------Ativer--------------");
+System.out.println("EnterBinary data:");
+BufferedReader br=new BufferedReader(new InputStreamReader(System.in));
+dataR=br.readLine();
+len+=1;
+if(len!=dataR.length()){
+System.out.println("EnterBinary data of length: "+len);
+return;
+}
+for(i=0;i<dataR.length();i++){
+if(dataR.charAt(i)!='1' && dataR.charAt(i)!='0'){
+System.out.println("Enter binary values");
+return;
+}
+}
+count1=count0=0;
+for(i=0;i<dataR.length();i++){
+if(dataR.charAt(i)=='1'){
+count1++;
+}
+if(dataR.charAt(i)=='0'){
+count0++;
+}
+}
+if(option==1){
+if(count1%2==0){
+System.out.println("Dataived successfully with no error");
+
+}
+else{
+System.out.println("Errorbeen detected in received data");
+}
+}
+else{
+if(count1%2!=0){
+System.out.println("Dataived successfully with no error");
+//System.out.println("Errorbeen detected in received data");
+}
+else{
+System.out.println("Errorbeen detected in received data");
+}
+}
+System.out.println();
+}
+public static void main(String[] args) throws IOException {
+OddEvenParity p=new OddEvenParity();
+p.getDataSender();
+p.getDataReciver();
+}
+}
